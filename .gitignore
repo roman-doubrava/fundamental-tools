@@ -24,15 +24,3 @@ dist
 # local test files
 /*.js
 
-# sap nwrfc sdk
-nwrfcsdk
-NWRFCSDK*
-NWRFCSDK/
-nwrfcsdk/
-work
-
-# src
-abap-api-tools/*
-!abap-api-tools/README.md
-
-abap-value-help

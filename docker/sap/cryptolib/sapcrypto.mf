@@ -1,0 +1,7 @@
+keyname: SAPCRYPTO
+keyvendor: sap.com
+keylocation: SAP SE
+
+version: 8.5.56
+patch number: 8556
+os: linuxx86_64
