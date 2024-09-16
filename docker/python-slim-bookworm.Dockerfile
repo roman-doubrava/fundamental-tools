@@ -13,20 +13,19 @@
 # docker start -ai python-311-slim-buster
 #
 
-FROM python:3.11-slim-buster
+FROM python:3.12.2-slim-bookworm
 
 ARG adminuser=www-admin
 
-ARG dev_python="pip wheel pytest cython ipython"
-ARG dev_tools="sudo curl wget git unzip vim tree tmux iproute2 iputils-ping"
-ARG dev_libs="build-essential make libssl-dev zlib1g-dev libbz2-dev libreadline-dev libsqlite3-dev llvm libncurses5-dev libncursesw5-dev xz-utils tk-dev"
+ARG dev_python="pyrfc==3.3.1"
+ARG dev_tools="sudo curl wget git unzip nano tree tmux iproute2 iputils-ping"
+ARG dev_libs="build-essential make libssl-dev zlib1g-dev libbz2-dev libncurses5-dev libncursesw5-dev xz-utils"
 
 ENV container docker
 
 # os update and packages
 USER root
 RUN \
-  sed -i 's/# \(.*multiverse$\)/\1/g' /etc/apt/sources.list && \
   apt update && DEBIAN_FRONTEND=noninteractive apt install -y locales ${dev_tools} ${dev_libs} && rm -rf /var/lib/apt/lists/*
 
 # timezone # https://serverfault.com/questions/683605/docker-container-time-timezone-will-not-reflect-changes
@@ -54,6 +53,11 @@ INCLUDE+ common/saplibs.Dockerfile
 # work user
 USER ${adminuser}
 WORKDIR /home/${adminuser}
+
 RUN printf "alias e=exit\nalias ..=cd..\nalias :q=exit\nalias ll='ls -l'\nalias la='ls -la'\nalias distro='cat /etc/*-release'\n" > .bash_aliases && \
   printf "\n# colors\nexport TERM=xterm-256color\n" >> .bashrc && \
   printf "\nexport PATH=/home/${adminuser}/.local/bin:$PATH\n" >> .bashrc
+
+SHELL ["/bin/bash", "-c"]
+
+RUN pip install ${dev_python}
